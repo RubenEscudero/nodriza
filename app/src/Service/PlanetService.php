@@ -2,15 +2,18 @@
 
 namespace App\Service;
 
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class PlanetService
 {
-    private $currentPlanetId;
+    private int $currentPlanetId;
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -20,9 +23,14 @@ class PlanetService
     }
 
     /**
+     * @param $id
+     * @return stdClass
      * @throws TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
      */
-    public function getPlanet($id): \stdClass
+    public function getPlanet($id): stdClass
     {
         $this->currentPlanetId = $id;
         $response = $this->httpClient->request('GET', $this->url . $id);
@@ -37,9 +45,9 @@ class PlanetService
         return $this->planetDataFormatter(json_decode($response->getContent()));
     }
 
-    private function planetDataFormatter($planetData): \stdClass
+    private function planetDataFormatter($planetData): stdClass
     {
-        $planet = new \stdClass();
+        $planet = new stdClass();
         $planet->id = $this->currentPlanetId;
         $planet->name = $planetData->name;
         $planet->rotation_period = $planetData->rotation_period;
