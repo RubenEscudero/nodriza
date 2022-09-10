@@ -36,10 +36,15 @@ class PlanetService
         $response = $this->httpClient->request('GET', $this->url . $id);
 
         if ($response->getStatusCode() != Response::HTTP_OK) {
+            $error = new stdClass();
+            $error->HTTP = $response->getStatusCode();
+            $error->message = 'Please try again, an error occurred.';
+
             if ($response->getStatusCode() == Response::HTTP_NOT_FOUND) {
-                throw new HttpException($response->getStatusCode(), 'Planet not found, try other id.');
+                $error->message = 'Planet not found, try other id.';
             }
-            throw new HttpException($response->getStatusCode(), 'Please try again, an error occurred.');
+
+            return $error;
         }
 
         return $this->planetDataFormatter(json_decode($response->getContent()));
@@ -50,9 +55,9 @@ class PlanetService
         $planet = new stdClass();
         $planet->id = $this->currentPlanetId;
         $planet->name = $planetData->name;
-        $planet->rotation_period = $planetData->rotation_period;
-        $planet->orbital_period = $planetData->orbital_period;
-        $planet->diameter = $planetData->diameter;
+        $planet->rotation_period = (int)$planetData->rotation_period;
+        $planet->orbital_period = (int)$planetData->orbital_period;
+        $planet->diameter = (int)$planetData->diameter;
         $planet->films_count = count($planetData->films);
         $planet->created = $planetData->created;
         $planet->edited = $planetData->edited;
