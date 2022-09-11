@@ -21,11 +21,11 @@ class PlanetControllerTest extends WebTestCase
         $params = [
             'id' => random_int(1000, 9999),
             'name' => 'Planet test',
-            'rotation_period' => 'Rotation test',
-            'orbital_period' => 'Orbital test',
+            'rotation_period' => 5,
+            'orbital_period' => 6,
             'diameter' => 6,
         ];
 
-        $client->request('POST', '/planet', ['json' => $params]);
+        $client->jsonRequest('POST', '/planet', $params);
     }
 }

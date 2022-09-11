@@ -12,8 +12,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class PlanetService
 {
-    private int $currentPlanetId;
-
     public function __construct(
         private readonly HttpClientInterface $httpClient,
         private                              $url
@@ -31,7 +29,6 @@ class PlanetService
      */
     public function getPlanet($id): stdClass
     {
-        $this->currentPlanetId = $id;
         $response = $this->httpClient->request('GET', $this->url . $id);
 
         if ($response->getStatusCode() != Response::HTTP_OK) {
@@ -46,13 +43,13 @@ class PlanetService
             return $error;
         }
 
-        return $this->planetDataFormatter(json_decode($response->getContent()));
+        return $this->planetDataFormatter(json_decode($response->getContent()), $id);
     }
 
-    private function planetDataFormatter($planetData): stdClass
+    private function planetDataFormatter($planetData, $id): stdClass
     {
         $planet = new stdClass();
-        $planet->id = $this->currentPlanetId;
+        $planet->id = $id;
         $planet->name = $planetData->name;
         $planet->rotation_period = (int)$planetData->rotation_period;
         $planet->orbital_period = (int)$planetData->orbital_period;

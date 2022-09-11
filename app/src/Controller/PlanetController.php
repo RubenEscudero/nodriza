@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Planet;
+use App\Service\PlanetService;
+use App\Repository\PlanetRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\PlanetService;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -14,8 +17,11 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class PlanetController extends AbstractController
 {
+
+
     public function __construct(
-        protected PlanetService $planetService
+        protected PlanetService    $planetService,
+        protected PlanetRepository $planetRepository
     )
     {
     }
@@ -36,9 +42,19 @@ class PlanetController extends AbstractController
         return new JsonResponse($planet);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/planet', name: 'post_planet', methods: ['POST'])]
-    public function postPlanet(Request $request)
+    public function postPlanet(Request $request): JsonResponse
     {
-        $params = 1;
+        $params = (array)json_decode($request->getContent());
+        $response = $this->planetRepository->add($params);
+
+        if ($response instanceof Planet) {
+            return new JsonResponse($response->toArray());
+        }
+
+        return new JsonResponse(['Error' => $response]);
     }
 }
