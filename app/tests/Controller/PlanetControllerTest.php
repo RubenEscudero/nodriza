@@ -23,9 +23,11 @@ class PlanetControllerTest extends WebTestCase
             'name' => 'Planet test',
             'rotation_period' => 5,
             'orbital_period' => 6,
-            'diameter' => 6,
+            'diameter' => 6
         ];
 
         $client->jsonRequest('POST', '/planet', $params);
+        $response = $client->getResponse()->getContent();
+        self::assertIsString($response);
     }
 }

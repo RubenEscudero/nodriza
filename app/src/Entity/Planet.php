@@ -3,16 +3,20 @@
 namespace App\Entity;
 
 use App\Repository\PlanetRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlanetRepository::class)]
 class Planet
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(unique: true)]
+    #[Assert\Unique]
+    #[Assert\NotNull]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotNull]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]

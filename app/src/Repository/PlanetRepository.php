@@ -28,7 +28,12 @@ class PlanetRepository extends ServiceEntityRepository
     public function add($params): Planet|string
     {
         $planet = new Planet();
-        $this->dynamicSetter($params, $planet);
+        $paramsValidation = $this->dynamicSetter($params, $planet);
+
+        if (is_string($paramsValidation)) {
+            return $paramsValidation;
+        }
+
         try {
             $this->_em->persist($planet);
             $this->_em->flush();
@@ -42,12 +47,18 @@ class PlanetRepository extends ServiceEntityRepository
     /**
      * @param $params
      * @param Planet $planet
+     * @return bool|string
      */
-    private function dynamicSetter($params, Planet $planet): void
+    private function dynamicSetter($params, Planet $planet): bool|string
     {
         foreach ($params as $key => $param) {
             $function = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
-            $planet->$function($param);
+            try {
+                $planet->$function($param);
+            } catch (\Error $e) {
+                return "Field $key is not valid.";
+            }
         }
+        return true;
     }
 }
