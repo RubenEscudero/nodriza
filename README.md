@@ -4,10 +4,10 @@
 El proyecto es un entorno dockerizado con PHP, NGINX y MySQL, se podrá acceder desde `http://localhost:8080/`. 
 Para montarlo se ejecuta el comando `docker-compose up -d`, una vez termine se inician los contenedores y se creará la carpeta mysql dondé irá almacenada la bbdd. 
 
-Una vez levantado el entorno será necesario instalar las dependencias, para instalarlas hay que entrar al contenedor  
+Una vez levantado el entorno será necesario instalar las dependencias, para ello hay que entrar al contenedor  
 de PHP con el comando `docker exec -it php-nodriza-container bash` y una vez estemos dentro del contenedor ejecutamos el comando `composer install`
 
-El último paso será crear y migrar la bbdd, desde el mismo contenedor de PHP para crear la bbdd se ejecuta el comando 
+El último paso será crear y migrar la bbdd, desde el mismo contenedor de PHP. Para crear la bbdd se ejecuta el comando 
 `php bin/console doctrine:database:create`. En caso de que haya algún problema en la creación de la tabla planet se puede lanzar la migración con el comando `php bin/console doctrine:migrations:migrate`.  
 
 ## Ejercicio A
@@ -36,10 +36,10 @@ la función dynamicSetter en PlanetRepository, de manera que si un campo no se p
 Se han creado dos test en el directorio tests/Controller/PlanetControllerTest para que ejecutando el fichero phpunit.xml.dist con la opción Debug se pueda hacer una validación rápida.  
 
 ## Ejercicio B
-Para ambos casos propondría hacer una segmentación de las consultas mediante OFFSET y LIMIT.
+Para ambos casos propongo hacer una segmentación de las consultas mediante OFFSET y LIMIT.
 
-En el primer punto, en caso de que los resultados se muestren al usuario mediante algún tipo de tabla o listado, plantearía mostrar una paginación númerica de la consulta.  
-En caso de que el listado se tuviese que mostrar entero propondría que en la parte de front se desarrollase un scroll infinito que segmentara la consulta y realizase las peticiones al back conforme sean necesarias.  
+En el primer punto, en caso de que los resultados se muestren al usuario mediante algún tipo de tabla o listado, planteo mostrar una paginación númerica de la consulta.  
+En caso de que el listado se tuviese que mostrar entero propongo que en la parte de front se desarrolle un scroll infinito que segmentara la consulta y realizase las peticiones al back conforme sean necesarias.  
 
 Para el segundo caso la solución es similar, programando en el batch las correspondientes segmentaciones de la consulta de tal forma que la tarea cron al lanzarse ejecute bloques de consultas.  
 Otra opción sería dividir la tarea cron en tareas crons más específicas.
