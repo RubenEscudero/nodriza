@@ -40,7 +40,15 @@ lo devuelve como mensaje de error.
 
 ### Test
 
-Se han creado dos test en el directorio tests/Controller/PlanetController para que ejecutando el fichero  
-phpunit.xml.dist se pueda hacer una validación rápida.  
+Se han creado dos test en el directorio tests/Controller/PlanetControllerTest para que ejecutando el fichero  
+phpunit.xml.dist con la opción Debug de PHPSTORM se pueda hacer una validación rápida.  
 
 ## Ejercicio B
+Para ambos casos propondría hacer una segmentación de las conusltas mediante OFFSET y LIMIT.
+
+En el primer punto, en caso de que los resultados se muestren al usuario mediante algún tipo de tabla, plantearía mostrar una paginación  
+de la consulta, en caso de que el listado se tuviese que mostrar entero propondría que en la parte de Front se desarrollase  
+un scroll infinito que segmentará la consulta utilizando de la misma forma.  
+
+Para implementarlo previamente se harían las pruebas necesarías de la canitdad de resultados que se pueden solicitar y el tiempo que tardan en ser consultados.
+
